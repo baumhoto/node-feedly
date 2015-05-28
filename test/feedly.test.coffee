@@ -108,10 +108,13 @@ module.exports =
     .then (contents) ->
       test.ok contents
       test.ok Array.isArray(contents.items)
+      test.ok contents.items.length == 20
       test.ok contents.continuation
-      f.contents FEED, contents.continuation
+      f.contents FEED, 10, 'oldest', true, null, contents.continuation
     .then (contents) ->
       test.ok contents
+      test.ok Array.isArray(contents.items)
+      test.ok contents.items.length == 10
       f.markFeedRead FEED
     .then ->
       f.markCategoryRead 'testing_bar'

@@ -186,6 +186,7 @@ module.exports = class Feedly
         headers:
           Authorization: "OAuth #{auth}"
         body: body
+        qs: body
         callback: callback
 
   # @nodoc
@@ -533,8 +534,16 @@ module.exports = class Feedly
   # @param continuation [string]  a continuation id is used to page
   # @param cb [function(error, Array(Page))] Optional callback
   # @return [promise(Array(Page))]
-  contents: (id, continuation, cb) ->
+  contents: (id, count, ranked, unreadOnly, newerThan, continuation, cb) ->
     input = {}
+    if count?
+      input.count = count
+    if ranked?
+      input.ranked = ranked
+    if unreadOnly?
+      input.unreadOnly = unreadOnly
+    if newerThan?
+      input.newerThan = newerThan
     if continuation?
       input.continuation = continuation
     @_request cb, "/v3/streams/#{encodeURIComponent(id)}/contents", 'GET', input
