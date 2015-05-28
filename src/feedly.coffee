@@ -56,6 +56,7 @@ module.exports = class Feedly
       slop: 3600000
       client_id: null
       client_secret: null
+      developer: false
     , options
     @options.config_file = untildify @options.config_file
     @options.html_file = untildify @options.html_file
@@ -179,7 +180,8 @@ module.exports = class Feedly
   _request: (callback, path, method='GET', body=null)->
     u = url.parse @options.base
     u.pathname = path
-    @_getAuth().then (auth)->
+
+    @_getAuthForMode().then (auth)->
       utils.qrequest
         method: method
         uri: url.format(u)
@@ -190,11 +192,20 @@ module.exports = class Feedly
         callback: callback
 
   # @nodoc
+  _getAuthForMode: ()->
+          if(@options.developer)
+            d = q.defer()
+            d.resolve  @options.client_secret
+            return d.promise
+          else
+            return @_getAuth()
+
+  # @nodoc
   _requestURL: (callback, path, method='GET', body=null)->
     u = url.parse @options.base
     u.pathname = path
     u.query = body
-    @_getAuth().then (auth)->
+    @_getAuthForMode().then (auth)->
       utils.qrequest
         method: method
         uri: url.format(u)

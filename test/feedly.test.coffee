@@ -17,6 +17,7 @@ module.exports =
     f = new Feedly
       client_id: 'sandbox'
       client_secret: FEEDLY_SECRET
+      developer: false
       base: 'http://sandbox.feedly.com'
       port: 8080
       config_file: CONFIG
